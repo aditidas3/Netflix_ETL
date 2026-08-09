@@ -5,3 +5,8 @@ netflix_dbt/logs/
 netflix_dbt/target/
 netflix_dbt/dbt_packages/
 .env
+netflix_etl.duckdb
+
+# covers all duckdb files 
+*.duckdb 
+*.duckdb.wal
