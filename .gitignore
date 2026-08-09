@@ -1,0 +1,7 @@
+.venv/
+venv
+logs
+netflix_dbt/logs/
+netflix_dbt/target/
+netflix_dbt/dbt_packages/
+.env

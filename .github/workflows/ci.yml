@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run dlt extraction (loads bronze into DuckDB)
+        run: python extract.py
+
+      - name: Create dbt profiles.yml for CI
+        run: |
+          mkdir -p ~/.dbt
+          cat > ~/.dbt/profiles.yml <<EOF
+          netflix_dbt:
+            outputs:
+              dev:
+                type: duckdb
+                path: ${{ github.workspace }}/netflix_etl.duckdb
+                threads: 1
+                schema: dbt_dev
+            target: dev
+          EOF
+
+      - name: Run dbt build (models + tests)
+        working-directory: ./netflix_dbt
+        run: |
+          dbt deps || true
+          dbt build
