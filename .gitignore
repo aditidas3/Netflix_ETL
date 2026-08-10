@@ -10,3 +10,5 @@ netflix_etl.duckdb
 # covers all duckdb files 
 *.duckdb 
 *.duckdb.wal
+
+netflix_dbt/models/staging/exploration.ipynb
